@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 在模板中把mysql类型转为java类型
+ * Mysql type in the template to java type
  * @author xslong
  * @time 2017/11/7 08:30
  */
@@ -27,7 +27,7 @@ public class TypeFunction implements TemplateMethodModelEx {
         String mysqlType = ((SimpleScalar) arguments.get(0)).getAsString();
         String javaType = columnTypeMapping.get(mysqlType);
         if (javaType == null) {
-            throw new RuntimeException("No binding type :"+mysqlType);
+            throw new RuntimeException("No binding type : "+mysqlType);
         }
         return javaType;
     }

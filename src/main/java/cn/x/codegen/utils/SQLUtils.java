@@ -18,7 +18,6 @@ public class SQLUtils {
         }
     }
 
-
     public static void close(ResultSet rs) {
         if (rs != null) {
             try {
@@ -53,7 +52,6 @@ public class SQLUtils {
         void each(int count, ResultSet rs) throws SQLException;
 
     }
-
 
 }
 

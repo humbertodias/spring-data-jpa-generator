@@ -16,7 +16,7 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * 生成代码
+ * Generate code
  * @author xslong
  * @time 2017/11/6 16:58
  */
@@ -46,7 +46,7 @@ public class CodeGenerator implements InitializingBean {
     @Value("${codegen.output.repository.package}")
     private String repositoryPackage;
 
-
+/*
     @Value("${codegen.output.service.overwrite}")
     private boolean serviceOverwrite;
     @Value("${codegen.output.service.path}")
@@ -61,14 +61,23 @@ public class CodeGenerator implements InitializingBean {
     private String serviceimplPath;
     @Value("${codegen.output.serviceimpl.package}")
     private String serviceimplPackage;
+*/
 
+
+    @Value("${codegen.output.controller.overwrite}")
+    private boolean controllerOverwrite;
+    @Value("${codegen.output.controller.path}")
+    private String controllerPath;
+    @Value("${codegen.output.controller.package}")
+    private String controllerPackage;
 
     @Override
     public void afterPropertiesSet() throws Exception {
         checkOutputDir(entityPath, entityPackage);
         checkOutputDir(repositoryPath, repositoryPackage);
-        checkOutputDir(servicePath, servicePackage);
-        checkOutputDir(serviceimplPath, serviceimplPackage);
+//        checkOutputDir(servicePath, servicePackage);
+//        checkOutputDir(serviceimplPath, serviceimplPackage);
+        checkOutputDir(controllerPath, controllerPackage);
     }
 
     private String checkOutputDir(String path, String pack) {
@@ -98,7 +107,7 @@ public class CodeGenerator implements InitializingBean {
         String repositoryCodePath = checkOutputDir(repositoryPath, repositoryPackage) + File.separator + entityName + "Repository.java";
         writeFile(repositoryCodePath, repositoryCode, repositoryOverwrite);
 
-
+        /*
         Template serviceTpl = freemarkerConfiguration.getTemplate("service.ftl", CHARSET);
         String serviceCode = FreeMarkerTemplateUtils.processTemplateIntoString(serviceTpl, tableMeta);
         String serviceCodePath = checkOutputDir(servicePath, servicePackage) + File.separator + entityName + "Service.java";
@@ -109,6 +118,12 @@ public class CodeGenerator implements InitializingBean {
         String serviceImplCode = FreeMarkerTemplateUtils.processTemplateIntoString(serviceImplTpl, tableMeta);
         String serviceImplCodePath = checkOutputDir(serviceimplPath, serviceimplPackage) + File.separator + entityName + "ServiceImpl.java";
         writeFile(serviceImplCodePath, serviceImplCode, serviceimplOverwrite);
+        */
+
+        Template controllerTpl = freemarkerConfiguration.getTemplate("controller.ftl", CHARSET);
+        String controllerCode = FreeMarkerTemplateUtils.processTemplateIntoString(controllerTpl, tableMeta);
+        String controllerCodePath = checkOutputDir(controllerPath, controllerPackage) + File.separator + entityName + "Controller.java";
+        writeFile(controllerCodePath, controllerCode, controllerOverwrite);
     }
 
     private void writeFile(String path, String code, boolean overwrite) throws IOException {

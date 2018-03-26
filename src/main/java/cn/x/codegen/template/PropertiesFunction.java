@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 /**
- * 在模板中可以读取 application.properties的值
+ * Can be read in the template application.properties
  * @author xslong
  * @time 2017/11/6 17:58
  */

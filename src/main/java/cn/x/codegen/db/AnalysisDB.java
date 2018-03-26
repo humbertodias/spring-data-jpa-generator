@@ -29,7 +29,7 @@ public class AnalysisDB {
     }
 
     /**
-     * 读取表列表
+     * Read table list
      * @return
      */
     public List<TableMeta> allTable(String tableSchema, String prefix) {

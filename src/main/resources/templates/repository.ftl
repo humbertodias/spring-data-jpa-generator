@@ -1,8 +1,9 @@
 package ${pv("codegen.output.repository.package")};
 
 import ${pv("codegen.output.entity.package")}.${nf("upperCamelCase",tableName)};
-import cn.xxxx.repository.IRepository;
+//import cn.xxxx.repository.IRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import javax.transaction.Transactional;
 
@@ -13,6 +14,6 @@ import javax.transaction.Transactional;
  * code generate time is ${.now}
  */
 @Repository
-public interface ${nf("upperCamelCase",tableName)}Repository extends IRepository<${nf("upperCamelCase",tableName)}, ${tf(pk.dataType)}> {
+public interface ${nf("upperCamelCase",tableName)}Repository extends JpaRepository<${nf("upperCamelCase",tableName)}, ${tf(pk.dataType)}> {
 }
 

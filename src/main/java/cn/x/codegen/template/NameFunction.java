@@ -12,7 +12,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 /**
- * 直接在模板中用 NameUtils.class 的方法
+ * Used directly in the template NameUtils.class Methods
  * @author xslong
  * @time 2017/11/7 08:30
  */

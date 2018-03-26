@@ -2,12 +2,13 @@ package ${pv("codegen.output.serviceimpl.package")};
 
 import cn.xxxx.AbstractService;
 import ${pv("codegen.output.entity.package")}.${nf("upperCamelCase",tableName)};
-import cn.xxxx.repository.IRepository;
+//import cn.xxxx.repository.IRepository;
 import ${pv("codegen.output.repository.package")}.${nf("upperCamelCase",tableName)}Repository;
 import ${pv("codegen.output.service.package")}.${nf("upperCamelCase",tableName)}Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
+
 /**
  * ${tableComment}
  * table :${tableName}

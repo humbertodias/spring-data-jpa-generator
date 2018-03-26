@@ -6,7 +6,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import java.util.List;
 
 /**
- * 表信息
+ * Table information
  * @author xslong
  * @time 2017/11/6 11:53
  */

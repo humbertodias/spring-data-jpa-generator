@@ -41,12 +41,12 @@ public class CodegenApplication implements CommandLineRunner {
     @Autowired
     private CodeGenerator codeGenerator;
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String ... args) {
         SpringApplication.run(CodegenApplication.class, args);
     }
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         final Set<String> tableSet = new HashSet<>();
         if (StringUtils.isNoneBlank(tables)) {
             tableSet.addAll(Arrays.asList(tables.split(",")));

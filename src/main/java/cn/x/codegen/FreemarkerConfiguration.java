@@ -27,7 +27,7 @@ public class FreemarkerConfiguration implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        //设置模板自定义函数
+        //Configurar funciones personalizadas de plantilla
         configuration.setSharedVariable("pv",propertiesFunction);
         configuration.setSharedVariable("nf",nameFunction);
         configuration.setSharedVariable("tf",typeFunction);

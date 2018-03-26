@@ -4,7 +4,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
- * 字段信息
+ * Field information
  * @author xslong
  * @time 2017/11/6 13:57
  */
