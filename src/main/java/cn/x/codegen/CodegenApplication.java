@@ -26,7 +26,7 @@ import java.util.Set;
 
 @SpringBootApplication
 @EnableAutoConfiguration
-@ComponentScan(basePackages = {"cn.x.codegen", "cn.xxxxxx"})
+@ComponentScan("cn.x.codegen")
 public class CodegenApplication implements CommandLineRunner {
 
     @Value("${codegen.enabled}")
