@@ -22,7 +22,7 @@ public class ${nf("upperCamelCase",tableName)}Controller {
     private ${nf("upperCamelCase",tableName)}Repository ${nf("lowerCamelCase",tableName)}Repository;
 
     // Get All
-    @GetMapping("/all")
+    @GetMapping("/")
     public List<${nf("upperCamelCase",tableName)}> getAll() {
         return ${nf("lowerCamelCase",tableName)}Repository.findAll();
     }

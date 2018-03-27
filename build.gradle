@@ -60,7 +60,8 @@ dependencies {
     compile("com.h2database:h2")
     // https://mvnrepository.com/artifact/org.projectlombok/lombok
     compile group: 'org.projectlombok', name: 'lombok', version: '1.16.20'
-    compile 'mysql:mysql-connector-java:5.1.40'
+    // https://mvnrepository.com/artifact/mysql/mysql-connector-java
+    compile group: 'mysql', name: 'mysql-connector-java', version: '6.0.6'
 
     compile 'org.apache.commons:commons-lang3:3.5'
     compile group: 'commons-io', name: 'commons-io', version: '2.6'

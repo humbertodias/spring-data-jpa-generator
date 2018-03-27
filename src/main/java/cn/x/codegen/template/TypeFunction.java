@@ -2,7 +2,6 @@ package cn.x.codegen.template;
 
 import freemarker.template.SimpleScalar;
 import freemarker.template.TemplateMethodModelEx;
-import freemarker.template.TemplateModelException;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
@@ -23,11 +22,11 @@ public class TypeFunction implements TemplateMethodModelEx {
     private Map<String, String> columnTypeMapping;
 
     @Override
-    public Object exec(List arguments) throws TemplateModelException {
+    public Object exec(List arguments) {
         String mysqlType = ((SimpleScalar) arguments.get(0)).getAsString();
         String javaType = columnTypeMapping.get(mysqlType);
         if (javaType == null) {
-            throw new RuntimeException("No binding type : "+mysqlType);
+            throw new RuntimeException("No binding type : " + mysqlType);
         }
         return javaType;
     }

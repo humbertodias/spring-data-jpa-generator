@@ -26,8 +26,11 @@ import java.util.Set;
 
 @SpringBootApplication
 @EnableAutoConfiguration
-@ComponentScan("cn.x.codegen")
+@ComponentScan(basePackages = {"cn.x.codegen", "cn.xxxxxx"})
 public class CodegenApplication implements CommandLineRunner {
+
+    @Value("${codegen.enabled}")
+    private Boolean enabled;
 
     @Value("${codegen.tableSchema}")
     private String tableSchema;
@@ -47,6 +50,12 @@ public class CodegenApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
+        if(enabled) {
+            generateCode();
+        }
+    }
+
+    private void generateCode() {
         final Set<String> tableSet = new HashSet<>();
         if (StringUtils.isNoneBlank(tables)) {
             tableSet.addAll(Arrays.asList(tables.split(",")));
@@ -59,14 +68,18 @@ public class CodegenApplication implements CommandLineRunner {
             }
             List<ColumnMeta> columns = an.allColumn(tableSchema, t.getTableName());
             t.setColumns(columns);
-            t.setPk(an.pk(columns));
-            t.setIndexs(an.allIndex(tableSchema,t.getTableName()));
+            ColumnMeta pk = an.pk(columns);
+            t.setPk(pk);
+            t.setIndexs(an.allIndex(tableSchema, t.getTableName()));
             try {
-                codeGenerator.process(t);
+                if (t.hasPrimaryKey()) {
+                    codeGenerator.process(t);
+                } else {
+                    System.err.format("Skipping table %s because doesn't have a primary key\n", t.getTableName());
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         });
-
     }
 }

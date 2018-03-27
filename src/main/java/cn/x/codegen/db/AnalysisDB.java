@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * 分析数据表结构
+ * Analyze the data table structure
  * @author xslong
  * @time 2017/11/6 11:53
  */
@@ -35,10 +35,10 @@ public class AnalysisDB {
     public List<TableMeta> allTable(String tableSchema, String prefix) {
         List<TableMeta> list = new ArrayList<TableMeta>();
         String sql = "SELECT TABLE_SCHEMA,TABLE_NAME ,TABLE_COMMENT FROM information_schema.tables "
-                + " WHERE table_schema ='" + tableSchema + "'";
-        if (prefix != null) {
-            sql += " and table_name like '" + prefix + "%'";
-        }
+                + " WHERE table_schema = ? "
+                +  " and table_name like ?";
+        String tableNamePrefix = prefix != null ? prefix + "%" : "%";
+        String [] parameters = {tableSchema, tableNamePrefix};
         SQLUtils.execute(connection, sql, new SQLUtils.ResultSetLoop() {
             @Override
             public void each(int count, ResultSet rs) throws SQLException {
@@ -48,15 +48,16 @@ public class AnalysisDB {
                 tm.setTableComment(rs.getString("TABLE_COMMENT"));
                 list.add(tm);
             }
-        });
+        }, parameters);
         return list;
     }
 
     public List<ColumnMeta> allColumn(String tableSchema, String tableName) {
         String sql = "SELECT TABLE_NAME,COLUMN_NAME,ORDINAL_POSITION,COLUMN_DEFAULT,IS_NULLABLE,COLUMN_KEY,DATA_TYPE,CHARACTER_MAXIMUM_LENGTH," +
                 "NUMERIC_PRECISION,NUMERIC_SCALE,COLUMN_TYPE,EXTRA,COLUMN_COMMENT " +
-                "from  information_schema.columns"
-                + " WHERE table_schema ='" + tableSchema + "' and table_name = '" + tableName + "'";
+                "from  information_schema.columns" +
+                " WHERE table_schema = ? and table_name = ?";
+        String [] parameters = {tableSchema,tableName};
         List<ColumnMeta> list = new ArrayList<>();
         SQLUtils.execute(connection, sql, new SQLUtils.ResultSetLoop() {
             @Override
@@ -72,7 +73,8 @@ public class AnalysisDB {
                 cm.setDataType(rs.getString("DATA_TYPE"));
 
                 if (rs.getObject("CHARACTER_MAXIMUM_LENGTH") != null) {
-                    cm.setCharacterMaximumLength(rs.getInt("CHARACTER_MAXIMUM_LENGTH"));
+                    Long character_maximum_length = rs.getLong("CHARACTER_MAXIMUM_LENGTH");
+                    cm.setCharacterMaximumLength(character_maximum_length.intValue());
                 }
                 if (rs.getObject("NUMERIC_PRECISION") != null) {
                     cm.setNumericPrecision(rs.getInt("NUMERIC_PRECISION"));
@@ -86,17 +88,18 @@ public class AnalysisDB {
                 cm.setColumnComment(rs.getString("COLUMN_COMMENT"));
                 list.add(cm);
             }
-        });
+        }, parameters);
         return list;
     }
 
     public List<IndexMeta> allIndex(String tableSchema, String tableName) {
         String sql = "select INDEX_NAME,COLUMN_NAME,NON_UNIQUE,TABLE_NAME,INDEX_TYPE\n" +
                 "from information_schema.STATISTICS\n" +
-                "where TABLE_SCHEMA = '" + tableSchema + "'\n" +
+                "where TABLE_SCHEMA = ? \n" +
                 "and INDEX_NAME <> 'PRIMARY'\n" +
-                "and TABLE_NAME = '" + tableName + "'\n" +
+                "and TABLE_NAME = ? \n" +
                 "order by SEQ_IN_INDEX";
+        String [] parameters = {tableSchema, tableName};
         List<IndexMeta> list = new ArrayList<>();
         SQLUtils.execute(connection, sql, new SQLUtils.ResultSetLoop() {
             @Override
@@ -109,7 +112,7 @@ public class AnalysisDB {
                 im.setIndexType(rs.getString("INDEX_TYPE"));
                 list.add(im);
             }
-        });
+        }, parameters);
         Map<String, List<IndexMeta>> newMap = list.stream().collect(Collectors.groupingBy(IndexMeta::getIndexName, Collectors.toList()));
         List<IndexMeta> result = new ArrayList<>();
         newMap.forEach((key, metas) -> {

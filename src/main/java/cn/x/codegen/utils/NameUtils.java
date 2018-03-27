@@ -7,7 +7,7 @@ package cn.x.codegen.utils;
 public class NameUtils {
 
     /**
-     * 大驼峰式命名
+     * Big camel-name
      *
      * @param str
      * @return
@@ -22,7 +22,7 @@ public class NameUtils {
     }
 
     /**
-     * 小驼峰式命名
+     * Small camel named
      *
      * @param str
      * @return
@@ -33,7 +33,7 @@ public class NameUtils {
     }
 
     /**
-     * 包名
+     * Package names
      *
      * @param str
      * @return
@@ -45,7 +45,7 @@ public class NameUtils {
     }
 
     /**
-     * 类名
+     * Class name
      *
      * @param str
      * @return
@@ -61,7 +61,7 @@ public class NameUtils {
     }
 
     /**
-     * 泛型
+     * Generic
      * @param str
      * @return
      */

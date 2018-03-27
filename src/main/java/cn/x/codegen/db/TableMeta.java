@@ -69,6 +69,10 @@ public class TableMeta {
         this.indexs = indexs;
     }
 
+    public boolean hasPrimaryKey(){
+        return pk != null;
+    }
+
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);

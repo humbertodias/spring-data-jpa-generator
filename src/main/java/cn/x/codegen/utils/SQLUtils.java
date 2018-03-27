@@ -2,6 +2,7 @@ package cn.x.codegen.utils;
 
 import java.sql.*;
 
+
 /**
  * @author xslong
  * @time 2017/11/6 12:01
@@ -29,11 +30,14 @@ public class SQLUtils {
         }
     }
 
-    public static void execute(Connection connection, String sql, ResultSetLoop rsl) {
+    public static void execute(Connection connection, String sql, ResultSetLoop rsl, Object ... parameters) {
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
             ps = connection.prepareStatement(sql);
+            for(int i=0; i < parameters.length; i++){
+                ps.setObject(i+1, parameters[i]);
+            }
             rs = ps.executeQuery();
             int count = 0;
             while (rs.next()) {
@@ -50,7 +54,6 @@ public class SQLUtils {
 
    public interface ResultSetLoop {
         void each(int count, ResultSet rs) throws SQLException;
-
     }
 
 }

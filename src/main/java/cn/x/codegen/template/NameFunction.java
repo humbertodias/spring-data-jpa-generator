@@ -23,7 +23,7 @@ public class NameFunction implements TemplateMethodModelEx {
     private String tablePrefix;
 
     @Override
-    public Object exec(List arguments) throws TemplateModelException {
+    public Object exec(List arguments) {
         String funName = ((SimpleScalar) arguments.get(0)).getAsString();
         String param1 = ((SimpleScalar) arguments.get(1)).getAsString();
         if (StringUtils.isNoneBlank(tablePrefix)) {

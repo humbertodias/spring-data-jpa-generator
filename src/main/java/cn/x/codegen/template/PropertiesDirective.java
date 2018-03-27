@@ -22,7 +22,7 @@ public class PropertiesDirective implements TemplateDirectiveModel, EnvironmentA
     }
 
     @Override
-    public void execute(Environment env, Map params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws TemplateException, IOException {
+    public void execute(Environment env, Map params, TemplateModel[] loopVars, TemplateDirectiveBody body) throws IOException {
         SimpleScalar simpleScalar = (SimpleScalar) params.get("name");
         String name = simpleScalar.getAsString();
         Writer out = env.getOut();

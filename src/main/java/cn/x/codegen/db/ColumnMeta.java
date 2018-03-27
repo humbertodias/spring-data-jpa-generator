@@ -19,7 +19,7 @@ public class ColumnMeta {
     private String dataType;
     private Integer characterMaximumLength;
     private Integer numericPrecision;
-    private Integer numericScale;// 小数点
+    private Integer numericScale;// Decimal point
     private String columnType;
     private String columnKey;
     private String extra;
