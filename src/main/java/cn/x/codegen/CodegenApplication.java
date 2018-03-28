@@ -4,6 +4,7 @@ import cn.x.codegen.db.AnalysisDB;
 import cn.x.codegen.db.ColumnMeta;
 import cn.x.codegen.db.TableMeta;
 import org.apache.commons.lang3.StringUtils;
+import org.aspectj.lang.annotation.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
@@ -12,6 +13,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
+import javax.annotation.PostConstruct;
 import java.sql.Connection;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -26,7 +28,7 @@ import java.util.Set;
 
 @SpringBootApplication
 @EnableAutoConfiguration
-@ComponentScan("cn.x.codegen")
+@ComponentScan({"cn.x.codegen", "cn.xxxxxx"})
 public class CodegenApplication implements CommandLineRunner {
 
     @Value("${codegen.enabled}")
@@ -55,6 +57,7 @@ public class CodegenApplication implements CommandLineRunner {
         }
     }
 
+
     private void generateCode() {
         final Set<String> tableSet = new HashSet<>();
         if (StringUtils.isNoneBlank(tables)) {
@@ -81,5 +84,6 @@ public class CodegenApplication implements CommandLineRunner {
                 e.printStackTrace();
             }
         });
+        codeGenerator.afterProcess();
     }
 }

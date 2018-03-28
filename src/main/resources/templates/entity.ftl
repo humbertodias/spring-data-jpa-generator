@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 import javax.persistence.*;
 import ${pv("codegen.output.entity.baseclass")};
+import java.io.Serializable;
+
 
 /**
  * ${tableComment}
@@ -23,7 +25,9 @@ import ${pv("codegen.output.entity.baseclass")};
     }
 </#if>
 )
-public class ${nf("upperCamelCase",tableName)} extends ${nf("simpleClassName",pv("codegen.output.entity.baseclass"))} {
+public class ${nf("upperCamelCase",tableName)}
+<#if (simpleClassName??)> extends ${nf("simpleClassName",pv("codegen.output.entity.baseclass"))} </#if>
+implements Serializable {
 <#list columns as col>
     <#if !(("," + pv('codegen.excludeColumn') + ",") ? contains("," + col.columnName + ","))>
 
