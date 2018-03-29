@@ -32,8 +32,8 @@ implements Serializable {
     <#if !(("," + pv('codegen.excludeColumn') + ",") ? contains("," + col.columnName + ","))>
 
     <#if (col.columnComment??)>// ${col.columnComment}</#if><#if (col.columnDefault??)>
-    // default: ${col.columnDefault}</#if><#if (col.columnKey=="PRI")>
-    @Id</#if><#if (col.extra=="auto_increment")>
+    // default: ${col.columnDefault}</#if><#if (col.isPrimaryKey())>
+    @Id</#if><#if (col.isAutoIncrement())>
     @GeneratedValue(strategy = GenerationType.AUTO)</#if>
     @Column(name = "${col.columnName}"<#if col.isNullable=="NO">, nullable = false</#if><#if (col.characterMaximumLength??)>, length = ${col
 .characterMaximumLength?replace(',', '')}</#if><#if (col.numericScale?? && col.numericScale > 0)>, scale = ${col.numericScale}</#if>)

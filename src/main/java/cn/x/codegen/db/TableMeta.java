@@ -1,5 +1,7 @@
 package cn.x.codegen.db;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -10,8 +12,11 @@ import java.util.List;
  * @author xslong
  * @time 2017/11/6 11:53
  */
+@Getter
+@Setter
 public class TableMeta {
 
+    private String catalog;
     private String tableSchema;
     private String tableName;
     private String tableComment;
@@ -20,54 +25,6 @@ public class TableMeta {
     private List<IndexMeta> indexs;
 
     private ColumnMeta pk;
-
-    public String getTableSchema() {
-        return tableSchema;
-    }
-
-    public void setTableSchema(String tableSchema) {
-        this.tableSchema = tableSchema;
-    }
-
-    public String getTableName() {
-        return tableName;
-    }
-
-    public void setTableName(String tableName) {
-        this.tableName = tableName;
-    }
-
-    public String getTableComment() {
-        return tableComment;
-    }
-
-    public void setTableComment(String tableComment) {
-        this.tableComment = tableComment;
-    }
-
-    public List<ColumnMeta> getColumns() {
-        return columns;
-    }
-
-    public void setColumns(List<ColumnMeta> columns) {
-        this.columns = columns;
-    }
-
-    public ColumnMeta getPk() {
-        return pk;
-    }
-
-    public void setPk(ColumnMeta pk) {
-        this.pk = pk;
-    }
-
-    public List<IndexMeta> getIndexs() {
-        return indexs;
-    }
-
-    public void setIndexs(List<IndexMeta> indexs) {
-        this.indexs = indexs;
-    }
 
     public boolean hasPrimaryKey(){
         return pk != null;

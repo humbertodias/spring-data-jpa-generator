@@ -1,13 +1,9 @@
 package cn.x.codegen.db;
 
-import cn.x.codegen.utils.SQLUtils;
-import org.apache.commons.lang3.StringUtils;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Analyze the data table structure
@@ -24,20 +20,21 @@ public class AnalysisMetaDB {
         this.metaData = connection.getMetaData();
     }
 
-    public List<TableMeta> allTable(String tableSchema) throws SQLException {
-        return allTable(tableSchema, null);
+    public List<TableMeta> allTable(String catalog, String tableSchema) throws SQLException {
+        return allTable(catalog, tableSchema, null);
     }
 
     /**
      * Read table list
      * @return
      */
-    public List<TableMeta> allTable(String tableSchema, String prefix) throws SQLException {
+    public List<TableMeta> allTable(String catalog, String tableSchema, String prefix) throws SQLException {
         List<TableMeta> list = new ArrayList<>();
         String tableNamePrefix = prefix != null ? prefix + "%" : "%";
-        ResultSet rs = metaData.getTables(null, tableSchema, tableNamePrefix, new String []{"TABLES"});
+        ResultSet rs = metaData.getTables(catalog, tableSchema, tableNamePrefix, null);
         while(rs.next()) {
             TableMeta tm = new TableMeta();
+            tm.setCatalog(rs.getString("TABLE_CAT"));
             tm.setTableSchema(rs.getString("TABLE_SCHEM"));
             tm.setTableName(rs.getString("TABLE_NAME"));
             tm.setTableComment(rs.getString("REMARKS"));
@@ -46,15 +43,12 @@ public class AnalysisMetaDB {
         return list;
     }
 
-    public List<ColumnMeta> allColumn(String tableSchema, String tableName) throws SQLException {
+    public List<ColumnMeta> allColumn(TableMeta tableMeta) throws SQLException {
         List<ColumnMeta> list = new ArrayList<>();
 
-//        Statement st = connection.prepareStatement("select * from " + tableName + " where 0=1");
-//        ResultSet rs = connection.getColumns(null, tableSchema,  tableName, "%");
-        ResultSet rs = metaData.getColumns(null, tableSchema,  tableName, "%");
+        List<IndexMeta> primaryKeys = getPrimaryKeys(tableMeta);
 
-//        ResultSet rs = metaData.getColumns(null, tableSchema,  tableName, "%");
-
+        ResultSet rs = metaData.getColumns(tableMeta.getCatalog(), tableMeta.getTableSchema(), tableMeta.getTableName()  , "%");
         while(rs.next()){
             ColumnMeta cm = new ColumnMeta();
             cm.setTableName(rs.getString("TABLE_NAME"));
@@ -64,7 +58,11 @@ public class AnalysisMetaDB {
             }
             cm.setColumnDefault(rs.getString("COLUMN_DEF"));
             cm.setIsNullable(rs.getString("IS_NULLABLE"));
-            cm.setDataType(rs.getString("DATA_TYPE"));
+
+            int jdbcType = rs.getInt("DATA_TYPE");
+            String jdbcTypeName = JDBCType.valueOf(jdbcType).getName().toLowerCase();
+            cm.setColumnType(jdbcTypeName);
+            cm.setDataType(jdbcTypeName);
 
             if (rs.getObject("COLUMN_SIZE") != null) {
                 Long character_maximum_length = rs.getLong("COLUMN_SIZE");
@@ -77,20 +75,8 @@ public class AnalysisMetaDB {
 //                cm.setNumericScale(rs.getInt("NUMERIC_SCALE"));
 //            }
 //            cm.setColumnKey(rs.getString("COLUMN_KEY"));
-            if(rs.getString("COLUMN_NAME").equalsIgnoreCase("ID")) {
-                cm.setColumnKey("PRI");
-            }
-
-            List<ColumnMeta> primaryKeys = getPrimaryKeys(tableSchema, tableName);
-            System.out.println(primaryKeys);
-
-            if(rs.getString("DATA_TYPE") != null){
-                int jdbcType = rs.getInt("DATA_TYPE");
-                cm.setColumnType(JDBCType.valueOf(jdbcType).getName());
-            }
-            if("YES".equals(rs.getString("IS_AUTOINCREMENT"))) {
-                cm.setExtra("auto_increment");
-            }
+            cm.setPrimaryKey( isPrimaryKey(cm, primaryKeys) );
+            cm.setAutoIncrement("YES".equals(rs.getString("IS_AUTOINCREMENT")));
             cm.setColumnComment(rs.getString("REMARKS"));
             list.add(cm);
         }
@@ -99,32 +85,34 @@ public class AnalysisMetaDB {
     }
 
 
-    public List<ColumnMeta> getPrimaryKeys(String tableSchema, String tableName) throws SQLException {
-        List<ColumnMeta> list = new ArrayList<>();
+    private boolean isPrimaryKey(ColumnMeta columnMeta, List<IndexMeta> primaryKeys){
+        return primaryKeys.stream().filter(idx -> idx.getColumnNames().equalsIgnoreCase(columnMeta.getColumnName()) ).count() > 0 ;
+    }
 
-        ResultSet rs = metaData.getPrimaryKeys(null,tableSchema, tableName);
 
+    public List<IndexMeta> getPrimaryKeys(TableMeta tableMeta) throws SQLException {
+        List<IndexMeta> list = new ArrayList<>();
+
+
+        ResultSet rs = metaData.getPrimaryKeys(tableMeta.getCatalog(),tableMeta.getTableSchema(), tableMeta.getTableName());
         while (rs.next()) {
-            ColumnMeta cm = new ColumnMeta();
-            cm.setTableName(rs.getString("TABLE_NAME"));
-            cm.setColumnName(rs.getString("COLUMN_NAME"));
-            if (rs.getObject("ORDINAL_POSITION") != null) {
-                cm.setOrdinalPosition(rs.getInt("ORDINAL_POSITION"));
-            }
-            cm.setColumnDefault(rs.getString("COLUMN_DEF"));
-            cm.setIsNullable(rs.getString("IS_NULLABLE"));
-            cm.setDataType(rs.getString("DATA_TYPE"));
-            list.add(cm);
+            IndexMeta im = new IndexMeta();
+            im.setIndexName(rs.getString("PK_NAME"));
+            im.setColumnNames(rs.getString("COLUMN_NAME"));
+            //im.setNonUnique(rs.getInt("NON_UNIQUE"));
+            im.setTableName(rs.getString("TABLE_NAME"));
+            //im.setIndexType(rs.getString("TYPE"));
+            list.add(im);
         }
 
         return list;
     }
 
 
-    public List<IndexMeta> allIndex(String tableSchema, String tableName) throws SQLException {
+    public List<IndexMeta> allIndex(TableMeta tableMeta) throws SQLException {
         List<IndexMeta> list = new ArrayList<>();
 
-        ResultSet rs = metaData.getIndexInfo(null, tableSchema, tableName, false, false);
+        ResultSet rs = metaData.getIndexInfo(tableMeta.getCatalog(), tableMeta.getTableSchema(), tableMeta.getTableName(), false, false);
 
         while (rs.next()) {
             IndexMeta im = new IndexMeta();
@@ -139,48 +127,17 @@ public class AnalysisMetaDB {
         return list;
     }
 
-/*
-        public List<IndexMeta> allIndex(String tableSchema, String tableName) {
-        String sql = "select INDEX_NAME,COLUMN_NAME,NON_UNIQUE,TABLE_NAME,INDEX_TYPE\n" +
-                "from information_schema.STATISTICS\n" +
-                "where TABLE_SCHEMA = ? \n" +
-                "and INDEX_NAME <> 'PRIMARY'\n" +
-                "and TABLE_NAME = ? \n" +
-                "order by SEQ_IN_INDEX";
-        String [] parameters = {tableSchema, tableName};
-        List<IndexMeta> list = new ArrayList<>();
-        SQLUtils.execute(connection, sql, new SQLUtils.ResultSetLoop() {
-            @Override
-            public void each(int count, ResultSet rs) throws SQLException {
-                IndexMeta im = new IndexMeta();
-                im.setIndexName(rs.getString("INDEX_NAME"));
-                im.setColumnNames(rs.getString("COLUMN_NAME"));
-                im.setNonUnique(rs.getInt("NON_UNIQUE"));
-                im.setTableName(rs.getString("TABLE_NAME"));
-                im.setIndexType(rs.getString("INDEX_TYPE"));
-                list.add(im);
-            }
-        }, parameters);
-        Map<String, List<IndexMeta>> newMap = list.stream().collect(Collectors.groupingBy(IndexMeta::getIndexName, Collectors.toList()));
-        List<IndexMeta> result = new ArrayList<>();
-        newMap.forEach((key, metas) -> {
-            if (metas.size() != 1) {
-                String columnNames = StringUtils.join(metas.stream().map(IndexMeta::getColumnNames).collect(Collectors.toList()), ",");
-                metas.get(0).setColumnNames(columnNames);
-            }
-            result.add(metas.get(0));
-        });
-        return result;
-    }
-*/
-
     public ColumnMeta pk(List<ColumnMeta> columnMetas) {
         for (ColumnMeta col : columnMetas) {
-            if ("PRI".equals(col.getColumnKey())) {
+            if (col.isPrimaryKey()) {
                 return col;
             }
         }
         return null;
+    }
+
+    public boolean isMySql() throws SQLException {
+        return metaData.getDatabaseProductName().toLowerCase().startsWith("mysql");
     }
 
 }

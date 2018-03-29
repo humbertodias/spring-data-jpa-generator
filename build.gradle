@@ -61,6 +61,8 @@ dependencies {
     compile("com.h2database:h2")
     // https://mvnrepository.com/artifact/org.projectlombok/lombok
     compile group: 'org.projectlombok', name: 'lombok', version: '1.16.20'
+    // https://mvnrepository.com/artifact/org.postgresql/postgresql
+    compile group: 'org.postgresql', name: 'postgresql', version: '42.2.2'
 
     compile 'mysql:mysql-connector-java:6.0.6'
     compile 'org.apache.commons:commons-lang3:3.5'
