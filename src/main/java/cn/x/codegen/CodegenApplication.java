@@ -1,6 +1,7 @@
 package cn.x.codegen;
 
 import cn.x.codegen.db.AnalysisDB;
+import cn.x.codegen.db.AnalysisMetaDB;
 import cn.x.codegen.db.ColumnMeta;
 import cn.x.codegen.db.TableMeta;
 import org.apache.commons.lang3.StringUtils;
@@ -15,6 +16,7 @@ import org.springframework.context.annotation.ComponentScan;
 
 import javax.annotation.PostConstruct;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -51,30 +53,30 @@ public class CodegenApplication implements CommandLineRunner {
     }
 
     @Override
-    public void run(String... args) {
+    public void run(String... args) throws SQLException {
         if(enabled) {
             generateCode();
         }
     }
 
 
-    private void generateCode() {
+    private void generateCode() throws SQLException {
         final Set<String> tableSet = new HashSet<>();
         if (StringUtils.isNoneBlank(tables)) {
             tableSet.addAll(Arrays.asList(tables.split(",")));
         }
-        AnalysisDB an = new AnalysisDB(connection);
+        AnalysisMetaDB an = new AnalysisMetaDB(connection);
         List<TableMeta> tables = an.allTable(tableSchema);
         tables.forEach(t -> {
             if (!tableSet.isEmpty() && !tableSet.contains(t.getTableName())) {
                 return;
             }
-            List<ColumnMeta> columns = an.allColumn(tableSchema, t.getTableName());
-            t.setColumns(columns);
-            ColumnMeta pk = an.pk(columns);
-            t.setPk(pk);
-            t.setIndexs(an.allIndex(tableSchema, t.getTableName()));
             try {
+                List<ColumnMeta> columns = an.allColumn(tableSchema, t.getTableName());
+                t.setColumns(columns);
+                ColumnMeta pk = an.pk(columns);
+                t.setPk(pk);
+                t.setIndexs(an.allIndex(tableSchema, t.getTableName()));
                 if (t.hasPrimaryKey()) {
                     codeGenerator.process(t);
                 } else {

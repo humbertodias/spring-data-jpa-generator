@@ -1,4 +1,4 @@
-package cn.x.codegen;
+package cn.x.codegen.config;
 
 import cn.x.codegen.template.NameFunction;
 import cn.x.codegen.template.PropertiesFunction;
@@ -8,10 +8,6 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-/**
- * @author xslong
- * @time 2017/11/6 17:25
- */
 @Component
 public class FreemarkerConfiguration implements InitializingBean {
 

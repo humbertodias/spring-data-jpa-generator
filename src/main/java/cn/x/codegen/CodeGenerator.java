@@ -32,7 +32,6 @@ public class CodeGenerator implements InitializingBean {
     @Value("${codegen.module}")
     private String module;
 
-
     @Value("${codegen.tablePrefix}")
     private String tablePrefix;
 

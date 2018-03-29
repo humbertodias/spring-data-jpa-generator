@@ -62,10 +62,9 @@ dependencies {
     // https://mvnrepository.com/artifact/org.projectlombok/lombok
     compile group: 'org.projectlombok', name: 'lombok', version: '1.16.20'
 
-    compile group: 'mysql', name: 'mysql-connector-java', version: '6.0.6'
-
+    compile 'mysql:mysql-connector-java:6.0.6'
     compile 'org.apache.commons:commons-lang3:3.5'
-    compile group: 'commons-io', name: 'commons-io', version: '2.6'
+    compile 'commons-io:commons-io:2.6'
 
 
     // https://mvnrepository.com/artifact/io.springfox/springfox-swagger2
