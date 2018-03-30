@@ -10,9 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Mysql type in the template to java type
- * @author xslong
- * @time 2017/11/7 08:30
+ * SQL type in the template to java type
  */
 @Component
 @ConfigurationProperties("codegen")
@@ -23,10 +21,10 @@ public class TypeFunction implements TemplateMethodModelEx {
 
     @Override
     public Object exec(List arguments) {
-        String mysqlType = ((SimpleScalar) arguments.get(0)).getAsString();
-        String javaType = columnTypeMapping.get(mysqlType);
+        String sqlType = ((SimpleScalar) arguments.get(0)).getAsString();
+        String javaType = columnTypeMapping.get(sqlType);
         if (javaType == null) {
-            throw new RuntimeException("No binding type : " + mysqlType);
+            throw new RuntimeException("No binding type : " + sqlType);
         }
         return javaType;
     }

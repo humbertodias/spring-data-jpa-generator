@@ -9,8 +9,6 @@ import java.util.List;
 
 /**
  * Table information
- * @author xslong
- * @time 2017/11/6 11:53
  */
 @Getter
 @Setter

@@ -7,8 +7,6 @@ import java.util.List;
 
 /**
  * Analyze the data table structure
- * @author xslong
- * @time 2017/11/6 11:53
  */
 public class AnalysisMetaDB {
 
@@ -42,7 +40,6 @@ public class AnalysisMetaDB {
 
             allColumn(tm);
             allIndex(tm);
-
         }
         return list;
     }

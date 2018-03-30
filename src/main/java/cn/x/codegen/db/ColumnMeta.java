@@ -7,8 +7,6 @@ import lombok.ToString;
 
 /**
  * Field information
- * @author xslong
- * @time 2017/11/6 13:57
  */
 @Getter
 @Setter

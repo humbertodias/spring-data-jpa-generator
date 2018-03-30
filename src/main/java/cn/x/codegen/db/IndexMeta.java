@@ -4,8 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * @author xslong
- * @time 2017/12/7 21:10
+ * Index
  */
 @Getter
 @Setter

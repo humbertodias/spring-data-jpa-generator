@@ -4,8 +4,7 @@ import java.sql.*;
 
 
 /**
- * @author xslong
- * @time 2017/11/6 12:01
+ * SQL Utilitaries
  */
 public class SQLUtils {
 

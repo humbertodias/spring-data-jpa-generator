@@ -16,15 +16,17 @@ import java.util.List;
 
 /**
  * Main
- * @author xslong
- * @time 2017/11/6 10:45
  */
 
 @SpringBootApplication
 @EnableAutoConfiguration
 @ComponentScan({"cn.x.codegen", "generated"})
-public class CodegenApplication implements CommandLineRunner {
+public class Application implements CommandLineRunner {
 
+
+    public static void main(String ... args) {
+        SpringApplication.run(Application.class, args);
+    }
 
     @Value("${codegen.enabled}")
     private Boolean enabled;
@@ -41,11 +43,6 @@ public class CodegenApplication implements CommandLineRunner {
     @Autowired
     private CodeGenerator codeGenerator;
 
-
-    public static void main(String ... args) {
-        SpringApplication.run(CodegenApplication.class, args);
-    }
-
     @Override
     public void run(String... args) throws SQLException {
         if(enabled) {
@@ -58,7 +55,6 @@ public class CodegenApplication implements CommandLineRunner {
         }
     }
 
-
     public void generateCode(TableMeta tableMeta) {
         try {
             codeGenerator.process(tableMeta);
@@ -66,6 +62,5 @@ public class CodegenApplication implements CommandLineRunner {
             e.printStackTrace();
         }
     }
-
 
 }

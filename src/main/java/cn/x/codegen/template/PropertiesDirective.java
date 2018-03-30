@@ -10,8 +10,7 @@ import java.io.Writer;
 import java.util.Map;
 
 /**
- * @author xslong
- * @time 2017/11/6 17:16
+ * Directives
  */
 @Component
 public class PropertiesDirective implements TemplateDirectiveModel, EnvironmentAware {

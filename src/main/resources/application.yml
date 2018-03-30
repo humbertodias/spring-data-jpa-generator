@@ -1,6 +1,13 @@
+server:
+  port: 8080
+
 spring:
   main:
     banner-mode: console
+
+#  devtools:
+#    restart:
+#      additional-paths: files
 
 #  datasource:
 #    driver-class-name: com.mysql.cj.jdbc.Driver
@@ -8,15 +15,22 @@ spring:
 #    username: root
 #    password: root
 
+#  datasource:
+#    driver-class-name: org.postgresql.Driver
+#    url: jdbc:postgresql://localhost:5432/crudtest
+#    username: postgres
+#    password: root
+#  jpa:
+#    database-platform: org.hibernate.dialect.PostgreSQLDialect
+#    properties:
+#      hibernate.jdbc.lob.non_contextual_creation: true
+
+
   datasource:
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/crudtest
-    username: postgres
-    password: root
-  jpa:
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
-    properties:
-      hibernate.jdbc.lob.non_contextual_creation: true
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:test;DATABASE_TO_UPPER=false;DB_CLOSE_DELAY=-1
+    username: sa
+    password:
 
   freemarker:
     charset: UTF-8
@@ -27,26 +41,17 @@ codegen:
   enabled: true
 
   #Database to be generated
-#  tableSchema: crudtest
   tableSchema: public
 
-# Table prefix
-
-  #codegen.tablePrefix=lc_core_
+  # Table prefix
   tablePrefix:
   module: core
 
   ## Separate multiple tables with commas
-  #codegen.tables=lc_core_test
   tables:
 
-
-#codegen.tablePrefix=lc_
-##codegen.module=basis
-##codegen.tables=lc_broadcast,lc_broadcast_image,lc_broadcast_relation
-
   # Excluded fields
-  #codegen.excludeColumn=creator,createDate,lastModifier,lastModDate,creatorName,lastModifierName
+  #excludeColumn=creator,createDate,lastModifier,lastModDate,creatorName,lastModifierName
   excludeColumn:
 
   output:
@@ -63,7 +68,6 @@ codegen:
     entity.package: ${codegen.output.configuration.package}.domain
     #Base class
     entity.baseclass: java.lang.Object
-    #codegen.output.entity.baseclass=cn.erasemee.domain.BaseDomain
 
     repository.overwrite: false
     repository.path: src/main/java

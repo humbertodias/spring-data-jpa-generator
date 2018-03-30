@@ -7,6 +7,15 @@ Generator of JPA code based on the structure of the database table
 gradle bootRun
 ```
 
+or
+
+```
+gradle build && java -jar build/libs/spring-boot-jpa-generator-1.0.0.jar 
+```
+
+
+http://localhost:8080/profile
+
 
 
 # IntelliJ (for Lombok)

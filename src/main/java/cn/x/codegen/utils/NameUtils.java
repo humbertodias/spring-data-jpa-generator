@@ -1,8 +1,6 @@
 package cn.x.codegen.utils;
 
 /**
- * @author xslong
- * @time 2017/11/6 16:01
  */
 public class NameUtils {
 

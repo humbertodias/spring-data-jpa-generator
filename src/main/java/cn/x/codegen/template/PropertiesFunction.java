@@ -9,8 +9,6 @@ import java.util.List;
 
 /**
  * Can be read in the template application.properties
- * @author xslong
- * @time 2017/11/6 17:58
  */
 @Component
 public class PropertiesFunction implements TemplateMethodModelEx ,EnvironmentAware {

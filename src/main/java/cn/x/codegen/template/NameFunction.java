@@ -13,8 +13,6 @@ import java.util.List;
 
 /**
  * Used directly in the template NameUtils.class Methods
- * @author xslong
- * @time 2017/11/7 08:30
  */
 @Component
 public class NameFunction implements TemplateMethodModelEx {

@@ -5,6 +5,8 @@ import cn.x.codegen.utils.NameUtils;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,13 +21,14 @@ import java.util.Collections;
 
 /**
  * Generate code
- * @author xslong
- * @time 2017/11/6 16:58
  */
 @Component
 public class CodeGenerator implements InitializingBean {
 
-    private final static String CHARSET = "UTF-8";
+    private static final Logger log = LoggerFactory.getLogger(Application.class);
+
+    @Value("${spring.freemarker.charset}")
+    private String CHARSET;
 
     @Autowired
     private Configuration freemarkerConfiguration;
@@ -71,8 +74,6 @@ public class CodeGenerator implements InitializingBean {
     public void afterPropertiesSet() {
         checkOutputDir(entityPath, entityPackage);
         checkOutputDir(repositoryPath, repositoryPackage);
-//        checkOutputDir(servicePath, servicePackage);
-//        checkOutputDir(serviceimplPath, serviceimplPackage);
         checkOutputDir(controllerPath, controllerPackage);
 
     }
@@ -103,7 +104,7 @@ public class CodeGenerator implements InitializingBean {
     public void process(TableMeta tableMeta) throws Exception {
 
         if (!tableMeta.hasPrimaryKey()) {
-            System.err.format("Skipping table %s because doesn't have a primary key\n", tableMeta.getTableName());
+            log.error(String.format("Skipping table %s because doesn't have a primary key\n", tableMeta.getTableName()));
         }else {
 
             String tableName = tableMeta.getTableName();
@@ -127,6 +128,8 @@ public class CodeGenerator implements InitializingBean {
             String controllerCodePath = checkOutputDir(controllerPath, controllerPackage) + File.separator + entityName + "Controller.java";
             writeFile(controllerCodePath, controllerCode, controllerOverwrite);
 
+
+            log.info("Generated files for " + tableName);
         }
     }
 
