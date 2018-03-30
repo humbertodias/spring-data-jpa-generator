@@ -39,13 +39,15 @@ public class AnalysisMetaDB {
             tm.setTableName(rs.getString("TABLE_NAME"));
             tm.setTableComment(rs.getString("REMARKS"));
             list.add(tm);
+
+            allColumn(tm);
+            allIndex(tm);
+
         }
         return list;
     }
 
-    public List<ColumnMeta> allColumn(TableMeta tableMeta) throws SQLException {
-        List<ColumnMeta> list = new ArrayList<>();
-
+    public void allColumn(TableMeta tableMeta) throws SQLException {
         List<IndexMeta> primaryKeys = getPrimaryKeys(tableMeta);
 
         ResultSet rs = metaData.getColumns(tableMeta.getCatalog(), tableMeta.getTableSchema(), tableMeta.getTableName()  , "%");
@@ -53,15 +55,12 @@ public class AnalysisMetaDB {
             ColumnMeta cm = new ColumnMeta();
             cm.setTableName(rs.getString("TABLE_NAME"));
             cm.setColumnName(rs.getString("COLUMN_NAME"));
-            if (rs.getObject("ORDINAL_POSITION") != null) {
-                cm.setOrdinalPosition(rs.getInt("ORDINAL_POSITION"));
-            }
+            cm.setOrdinalPosition(rs.getInt("ORDINAL_POSITION"));
             cm.setColumnDefault(rs.getString("COLUMN_DEF"));
             cm.setIsNullable(rs.getString("IS_NULLABLE"));
 
             int jdbcType = rs.getInt("DATA_TYPE");
             String jdbcTypeName = JDBCType.valueOf(jdbcType).getName().toLowerCase();
-            cm.setColumnType(jdbcTypeName);
             cm.setDataType(jdbcTypeName);
 
             if (rs.getObject("COLUMN_SIZE") != null) {
@@ -75,13 +74,18 @@ public class AnalysisMetaDB {
 //                cm.setNumericScale(rs.getInt("NUMERIC_SCALE"));
 //            }
 //            cm.setColumnKey(rs.getString("COLUMN_KEY"));
-            cm.setPrimaryKey( isPrimaryKey(cm, primaryKeys) );
+            boolean isPK = isPrimaryKey(cm, primaryKeys);
+            cm.setPrimaryKey( isPK );
+            if(isPK){
+                tableMeta.setPk(cm);
+            }
+
             cm.setAutoIncrement("YES".equals(rs.getString("IS_AUTOINCREMENT")));
             cm.setColumnComment(rs.getString("REMARKS"));
-            list.add(cm);
-        }
 
-        return list;
+            tableMeta.getColumns().add(cm);
+
+        }
     }
 
 
@@ -109,9 +113,7 @@ public class AnalysisMetaDB {
     }
 
 
-    public List<IndexMeta> allIndex(TableMeta tableMeta) throws SQLException {
-        List<IndexMeta> list = new ArrayList<>();
-
+    public void allIndex(TableMeta tableMeta) throws SQLException {
         ResultSet rs = metaData.getIndexInfo(tableMeta.getCatalog(), tableMeta.getTableSchema(), tableMeta.getTableName(), false, false);
 
         while (rs.next()) {
@@ -121,23 +123,9 @@ public class AnalysisMetaDB {
             im.setNonUnique(rs.getInt("NON_UNIQUE"));
             im.setTableName(rs.getString("TABLE_NAME"));
             im.setIndexType(rs.getString("TYPE"));
-            list.add(im);
+
+            tableMeta.getIndexs().add(im);
         }
-
-        return list;
-    }
-
-    public ColumnMeta pk(List<ColumnMeta> columnMetas) {
-        for (ColumnMeta col : columnMetas) {
-            if (col.isPrimaryKey()) {
-                return col;
-            }
-        }
-        return null;
-    }
-
-    public boolean isMySql() throws SQLException {
-        return metaData.getDatabaseProductName().toLowerCase().startsWith("mysql");
     }
 
 }

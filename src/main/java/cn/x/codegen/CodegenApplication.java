@@ -53,11 +53,9 @@ public class CodegenApplication implements CommandLineRunner {
     }
 
     @Override
-    public void run(String... args)  {
-        try {
+    public void run(String... args) throws SQLException {
+        if(enabled) {
             generateCode();
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 
@@ -73,11 +71,6 @@ public class CodegenApplication implements CommandLineRunner {
                 .filter( t -> tableSet.isEmpty() || tableSet.contains(t.getTableName()))
                 .forEach(t -> {
                     try {
-                        List<ColumnMeta> columns = an.allColumn(t);
-                        t.setColumns(columns);
-                        ColumnMeta pk = an.pk(columns);
-                        t.setPk(pk);
-                        t.setIndexs(an.allIndex(t));
                         if (t.hasPrimaryKey()) {
                             codeGenerator.process(t);
                         } else {

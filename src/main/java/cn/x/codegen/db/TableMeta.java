@@ -5,6 +5,7 @@ import lombok.Setter;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,8 +22,8 @@ public class TableMeta {
     private String tableName;
     private String tableComment;
 
-    private List<ColumnMeta> columns;
-    private List<IndexMeta> indexs;
+    private List<ColumnMeta> columns = new ArrayList<>();
+    private List<IndexMeta> indexs = new ArrayList<>();
 
     private ColumnMeta pk;
 

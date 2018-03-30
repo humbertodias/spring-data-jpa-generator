@@ -1,0 +1,109 @@
+spring:
+  main:
+    banner-mode: off
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/crudtest?useSSL=false
+    username: root
+    password: root
+
+  freemarker:
+    charset: UTF-8
+    template-loader-path: classpath:/templates
+
+# Enabled?
+codegen:
+  enabled: true
+
+  #Database to be generated
+  tableSchema: crudtest
+
+# Table prefix
+
+  #codegen.tablePrefix=lc_core_
+  tablePrefix:
+  module: core
+
+  ## Separate multiple tables with commas
+  #codegen.tables=lc_core_test
+  tables: users,tags
+
+
+#codegen.tablePrefix=lc_
+##codegen.module=basis
+##codegen.tables=lc_broadcast,lc_broadcast_image,lc_broadcast_relation
+
+  # Excluded fields
+  #codegen.excludeColumn=creator,createDate,lastModifier,lastModDate,creatorName,lastModifierName
+  excludeColumn:
+
+  output:
+    configuration:
+      overwrite: false
+      path: src/main/java
+      package: cn.xxxxxx
+
+    #Overwrite existing code
+    entity.overwrite: true
+    #Code output directory
+    entity.path: src/main/java
+    #Package names
+    entity.package: ${codegen.output.configuration.package}.domain
+    #Base class
+    entity.baseclass: java.lang.Object
+    #codegen.output.entity.baseclass=cn.erasemee.domain.BaseDomain
+
+    repository.overwrite: false
+    repository.path: src/main/java
+    repository.package: ${codegen.output.configuration.package}.repository
+    #Time is limited, temporarily not realized
+    #repository.baseclass: cn.erasemee.repository.IRepository<{Entity},{PK}>
+
+    service.overwrite: false
+    service.path: src/main/java
+    service.package: ${codegen.output.configuration.package}.service
+    #codegen.output.service.baseclass: cn.erasemee.service.IService<{Entity},{PK}>
+
+    serviceimpl.overwrite: false
+    serviceimpl.path: src/main/java
+    serviceimpl.package: ${codegen.output.configuration.package}.service.impl
+    #serviceimpl.baseclass: cn.erasemee.AbstractService<{Entity},{PK}>
+
+    controller.overwrite: false
+    controller.path: src/main/java
+    controller.package: ${codegen.output.configuration.package}.controller
+
+
+  ## MySQL and JAVA type mapping
+  ## http://www.cnblogs.com/waterystone/p/6226356.html
+  column-type-mapping[bit]: byte[]
+  column-type-mapping[tinyint]: Integer
+  column-type-mapping[smallint]: Integer
+  column-type-mapping[mediumint]: Integer
+  column-type-mapping[int]: Long
+  column-type-mapping[integer]: Long
+  column-type-mapping[bigint]: Long
+  column-type-mapping[float]: Float
+  column-type-mapping[double]: Double
+  column-type-mapping[decimal]: java.math.BigDecimal
+  column-type-mapping[date]: java.util.Date
+  column-type-mapping[datetime]: java.util.Date
+  column-type-mapping[timestamp]: java.util.Date
+  column-type-mapping[time]: java.sql.Time
+  column-type-mapping[char]: String
+  column-type-mapping[varchar]: String
+  column-type-mapping[binary]: byte[]
+  column-type-mapping[varbinary]: byte[]
+  column-type-mapping[tinyblob]: byte[]
+  column-type-mapping[tinytext]: String
+  column-type-mapping[blob]: byte[]
+  column-type-mapping[text]: String
+  column-type-mapping[mediumblob]: byte[]
+  column-type-mapping[mediumtext]: String
+  column-type-mapping[longblob]: byte[]
+  column-type-mapping[longtext]: String
+  column-type-mapping[enum]: String
+  column-type-mapping[set]: String
+  column-type-mapping[json]: String
+  column-type-mapping[point]: String
