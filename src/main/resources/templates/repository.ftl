@@ -10,7 +10,7 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import javax.transaction.Transactional;
 
 /**
- * ${tableComment}
+ * ${tableComment!""}
  * table :${tableName}
  * @author spring-data-jpa-generator
  * code generate time is ${.now}

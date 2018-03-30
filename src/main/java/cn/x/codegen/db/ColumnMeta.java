@@ -1,7 +1,9 @@
 package cn.x.codegen.db;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -12,6 +14,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  */
 @Getter
 @Setter
+@ToString
+@NoArgsConstructor
 public class ColumnMeta {
 
     // id auto_increment
@@ -19,7 +23,6 @@ public class ColumnMeta {
     private String columnName;
     private Integer ordinalPosition; // 1-
     private String columnDefault;
-    private String isNullable;// no yes
     private String dataType;
     private Integer characterMaximumLength;
     private Integer numericPrecision;
@@ -28,12 +31,7 @@ public class ColumnMeta {
     private String columnKey;
     private String extra;
     private String columnComment;
+    private boolean isNullable;// no yes
     private boolean isPrimaryKey;
     private boolean isAutoIncrement;
-
-
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
-    }
 }

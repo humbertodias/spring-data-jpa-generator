@@ -69,7 +69,7 @@ public class AnalysisDB {
                     cm.setOrdinalPosition(rs.getInt("ORDINAL_POSITION"));
                 }
                 cm.setColumnDefault(rs.getString("COLUMN_DEFAULT"));
-                cm.setIsNullable(rs.getString("IS_NULLABLE"));
+                cm.setNullable("YES".equals(rs.getString("IS_NULLABLE")));
                 cm.setDataType(rs.getString("DATA_TYPE"));
 
                 if (rs.getObject("CHARACTER_MAXIMUM_LENGTH") != null) {
@@ -107,7 +107,7 @@ public class AnalysisDB {
                 IndexMeta im = new IndexMeta();
                 im.setIndexName(rs.getString("INDEX_NAME"));
                 im.setColumnNames(rs.getString("COLUMN_NAME"));
-                im.setNonUnique(rs.getInt("NON_UNIQUE"));
+                im.setNonUnique(rs.getBoolean("NON_UNIQUE"));
                 im.setTableName(rs.getString("TABLE_NAME"));
                 im.setIndexType(rs.getString("INDEX_TYPE"));
                 list.add(im);

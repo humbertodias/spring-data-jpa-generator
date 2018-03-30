@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 
 /**
- * ${tableComment}
+ * ${tableComment!""}
  * table :${tableName}
  * @author spring-data-jpa-generator
  * code generate time is ${.now}
@@ -20,7 +20,7 @@ import java.io.Serializable;
     name = "${tableName}"<#if indexs?has_content>,
     indexes = {
     <#list indexs as idx>
-        @Index(name = "${idx.indexName}", columnList = "${idx.columnNames}"<#if idx.nonUnique = 0>, unique = true</#if>),
+        @Index(name = "${idx.indexName}", columnList = "${idx.columnNames}"<#if idx.isNonUnique()>, unique = true</#if>),
     </#list>
     }
 </#if>
@@ -35,7 +35,7 @@ implements Serializable {
     // default: ${col.columnDefault}</#if><#if (col.isPrimaryKey())>
     @Id</#if><#if (col.isAutoIncrement())>
     @GeneratedValue(strategy = GenerationType.AUTO)</#if>
-    @Column(name = "${col.columnName}"<#if col.isNullable=="NO">, nullable = false</#if><#if (col.characterMaximumLength??)>, length = ${col
+    @Column(name = "${col.columnName}"<#if col.isNullable()>, nullable = false</#if><#if (col.characterMaximumLength??)>, length = ${col
 .characterMaximumLength?replace(',', '')}</#if><#if (col.numericScale?? && col.numericScale > 0)>, scale = ${col.numericScale}</#if>)
     private ${tf(col.dataType)} ${col.columnName};
     </#if>

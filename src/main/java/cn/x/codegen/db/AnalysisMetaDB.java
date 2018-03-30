@@ -47,6 +47,11 @@ public class AnalysisMetaDB {
         return list;
     }
 
+    /**
+     * https://docs.oracle.com/javase/9/docs/api/java/sql/DatabaseMetaData.html#getColumns-java.lang.String-java.lang.String-java.lang.String-java.lang.String-
+     * @param tableMeta
+     * @throws SQLException
+     */
     public void allColumn(TableMeta tableMeta) throws SQLException {
         List<IndexMeta> primaryKeys = getPrimaryKeys(tableMeta);
 
@@ -57,7 +62,6 @@ public class AnalysisMetaDB {
             cm.setColumnName(rs.getString("COLUMN_NAME"));
             cm.setOrdinalPosition(rs.getInt("ORDINAL_POSITION"));
             cm.setColumnDefault(rs.getString("COLUMN_DEF"));
-            cm.setIsNullable(rs.getString("IS_NULLABLE"));
 
             int jdbcType = rs.getInt("DATA_TYPE");
             String jdbcTypeName = JDBCType.valueOf(jdbcType).getName().toLowerCase();
@@ -73,7 +77,6 @@ public class AnalysisMetaDB {
 //            if (rs.getObject("NUMERIC_SCALE") != null) {
 //                cm.setNumericScale(rs.getInt("NUMERIC_SCALE"));
 //            }
-//            cm.setColumnKey(rs.getString("COLUMN_KEY"));
             boolean isPK = isPrimaryKey(cm, primaryKeys);
             cm.setPrimaryKey( isPK );
             if(isPK){
@@ -81,6 +84,7 @@ public class AnalysisMetaDB {
             }
 
             cm.setAutoIncrement("YES".equals(rs.getString("IS_AUTOINCREMENT")));
+            cm.setNullable("YES".equals(rs.getString("IS_NULLABLE")));
             cm.setColumnComment(rs.getString("REMARKS"));
 
             tableMeta.getColumns().add(cm);
@@ -113,6 +117,11 @@ public class AnalysisMetaDB {
     }
 
 
+    /**
+     * https://docs.oracle.com/javase/7/docs/api/java/sql/DatabaseMetaData.html#getIndexInfo(java.lang.String,%20java.lang.String,%20java.lang.String,%20boolean,%20boolean)
+     * @param tableMeta
+     * @throws SQLException
+     */
     public void allIndex(TableMeta tableMeta) throws SQLException {
         ResultSet rs = metaData.getIndexInfo(tableMeta.getCatalog(), tableMeta.getTableSchema(), tableMeta.getTableName(), false, false);
 
@@ -120,7 +129,7 @@ public class AnalysisMetaDB {
             IndexMeta im = new IndexMeta();
             im.setIndexName(rs.getString("INDEX_NAME"));
             im.setColumnNames(rs.getString("COLUMN_NAME"));
-            im.setNonUnique(rs.getInt("NON_UNIQUE"));
+            im.setNonUnique(rs.getBoolean("NON_UNIQUE"));
             im.setTableName(rs.getString("TABLE_NAME"));
             im.setIndexType(rs.getString("TYPE"));
 

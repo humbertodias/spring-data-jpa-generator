@@ -13,7 +13,7 @@ public class IndexMeta {
 
     private String indexName;
     private String columnNames;
-    private int nonUnique;
+    private boolean nonUnique;
     private String tableName;
     private String indexType;
 

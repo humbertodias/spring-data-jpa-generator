@@ -21,7 +21,6 @@ public class ${nf("upperCamelCase",tableName)}Controller {
     @Autowired
     private ${nf("upperCamelCase",tableName)}Repository ${nf("lowerCamelCase",tableName)}Repository;
 
-    // Get All
     @GetMapping
     public List<${nf("upperCamelCase",tableName)}> getAll() {
         return ${nf("lowerCamelCase",tableName)}Repository.findAll();

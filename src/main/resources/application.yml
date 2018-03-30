@@ -2,11 +2,22 @@ spring:
   main:
     banner-mode: off
 
+#  datasource:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://127.0.0.1:3306/crudtest?useSSL=false
+#    username: root
+#    password: root
+
+
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/crudtest?useSSL=false
-    username: root
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/crudtest
+    username: postgres
     password: root
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    properties:
+      hibernate.jdbc.lob.non_contextual_creation: true
 
   freemarker:
     charset: UTF-8
@@ -17,7 +28,8 @@ codegen:
   enabled: true
 
   #Database to be generated
-  tableSchema: crudtest
+#  tableSchema: crudtest
+  tableSchema: publics
 
 # Table prefix
 
@@ -107,3 +119,4 @@ codegen:
   column-type-mapping[set]: String
   column-type-mapping[json]: String
   column-type-mapping[point]: String
+  column-type-mapping[numeric]: Integer
