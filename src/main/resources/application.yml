@@ -1,13 +1,12 @@
 spring:
   main:
-    banner-mode: off
+    banner-mode: console
 
 #  datasource:
 #    driver-class-name: com.mysql.cj.jdbc.Driver
 #    url: jdbc:mysql://127.0.0.1:3306/crudtest?useSSL=false
 #    username: root
 #    password: root
-
 
   datasource:
     driver-class-name: org.postgresql.Driver
@@ -29,7 +28,7 @@ codegen:
 
   #Database to be generated
 #  tableSchema: crudtest
-  tableSchema: publics
+  tableSchema: public
 
 # Table prefix
 
@@ -39,7 +38,7 @@ codegen:
 
   ## Separate multiple tables with commas
   #codegen.tables=lc_core_test
-  tables: users,tags
+  tables:
 
 
 #codegen.tablePrefix=lc_
@@ -52,9 +51,9 @@ codegen:
 
   output:
     configuration:
-      overwrite: false
+      overwrite: true
       path: src/main/java
-      package: cn.xxxxxx
+      package: generated
 
     #Overwrite existing code
     entity.overwrite: true
@@ -71,16 +70,6 @@ codegen:
     repository.package: ${codegen.output.configuration.package}.repository
     #Time is limited, temporarily not realized
     #repository.baseclass: cn.erasemee.repository.IRepository<{Entity},{PK}>
-
-    service.overwrite: false
-    service.path: src/main/java
-    service.package: ${codegen.output.configuration.package}.service
-    #codegen.output.service.baseclass: cn.erasemee.service.IService<{Entity},{PK}>
-
-    serviceimpl.overwrite: false
-    serviceimpl.path: src/main/java
-    serviceimpl.package: ${codegen.output.configuration.package}.service.impl
-    #serviceimpl.baseclass: cn.erasemee.AbstractService<{Entity},{PK}>
 
     controller.overwrite: false
     controller.path: src/main/java

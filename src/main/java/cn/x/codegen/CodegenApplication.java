@@ -1,24 +1,18 @@
 package cn.x.codegen;
 
 import cn.x.codegen.db.AnalysisMetaDB;
-import cn.x.codegen.db.ColumnMeta;
 import cn.x.codegen.db.TableMeta;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Main
@@ -28,7 +22,7 @@ import java.util.Set;
 
 @SpringBootApplication
 @EnableAutoConfiguration
-@ComponentScan({"cn.x.codegen", "cn.xxxxxx"})
+@ComponentScan({"cn.x.codegen", "generated"})
 public class CodegenApplication implements CommandLineRunner {
 
 
@@ -55,32 +49,22 @@ public class CodegenApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws SQLException {
         if(enabled) {
-            generateCode();
+            AnalysisMetaDB an = new AnalysisMetaDB(connection);
+            List<TableMeta> allTables = an.allTable(tableSchema, null);
+            allTables.stream()
+                    .filter( t -> tables.contains(t.getTableName()) || tables.isEmpty() )
+                    .forEach(  this::generateCode );
+            codeGenerator.afterProcess();
         }
     }
 
 
-    public void generateCode() throws SQLException {
-        final Set<String> tableSet = new HashSet<>();
-        if (StringUtils.isNoneBlank(tables)) {
-            tableSet.addAll(Arrays.asList(tables.split(",")));
+    public void generateCode(TableMeta tableMeta) {
+        try {
+            codeGenerator.process(tableMeta);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        AnalysisMetaDB an = new AnalysisMetaDB(connection);
-        List<TableMeta> tables = an.allTable(tableSchema, null);
-        tables.stream()
-                .filter( t -> tableSet.isEmpty() || tableSet.contains(t.getTableName()))
-                .forEach(t -> {
-                    try {
-                        if (t.hasPrimaryKey()) {
-                            codeGenerator.process(t);
-                        } else {
-                            System.err.format("Skipping table %s because doesn't have a primary key\n", t.getTableName());
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                });
-        codeGenerator.afterProcess();
     }
 
 

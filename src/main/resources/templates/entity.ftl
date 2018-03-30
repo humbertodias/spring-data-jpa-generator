@@ -26,8 +26,7 @@ import java.io.Serializable;
 </#if>
 )
 public class ${nf("upperCamelCase",tableName)}
-<#if (simpleClassName??)> extends ${nf("simpleClassName",pv("codegen.output.entity.baseclass"))} </#if>
-implements Serializable {
+<#if (simpleClassName??)> extends ${nf("simpleClassName",pv("codegen.output.entity.baseclass"))} </#if> implements Serializable {
 <#list columns as col>
     <#if !(("," + pv('codegen.excludeColumn') + ",") ? contains("," + col.columnName + ","))>
 

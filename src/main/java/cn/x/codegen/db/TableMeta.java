@@ -2,8 +2,7 @@ package cn.x.codegen.db;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +14,7 @@ import java.util.List;
  */
 @Getter
 @Setter
+@ToString
 public class TableMeta {
 
     private String catalog;
@@ -31,8 +31,4 @@ public class TableMeta {
         return pk != null;
     }
 
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
-    }
 }

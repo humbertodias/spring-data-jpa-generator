@@ -9,13 +9,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import java.util.List;
 
 /**
- * ${tableComment}
+ * ${tableComment!""}
  * table :${tableName}
  * @author spring-data-jpa-generator
  * Code generate time is ${.now}
  */
 @RestController
-@RequestMapping("/${tableName}")
+@RequestMapping("${tableName}")
 public class ${nf("upperCamelCase",tableName)}Controller {
 
     @Autowired
