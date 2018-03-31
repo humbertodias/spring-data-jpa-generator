@@ -29,7 +29,8 @@ public class AnalysisMetaDB {
     public List<TableMeta> allTable(String catalog, String tableSchema, String prefix) throws SQLException {
         List<TableMeta> list = new ArrayList<>();
         String tableNamePrefix = prefix != null ? prefix + "%" : "%";
-        ResultSet rs = metaData.getTables(catalog, tableSchema, tableNamePrefix, null);
+        String [] tables = {"TABLE"};
+        ResultSet rs = metaData.getTables(catalog, tableSchema, tableNamePrefix, tables);
         while(rs.next()) {
             TableMeta tm = new TableMeta();
             tm.setCatalog(rs.getString("TABLE_CAT"));
@@ -113,7 +114,6 @@ public class AnalysisMetaDB {
         return list;
     }
 
-
     /**
      * https://docs.oracle.com/javase/7/docs/api/java/sql/DatabaseMetaData.html#getIndexInfo(java.lang.String,%20java.lang.String,%20java.lang.String,%20boolean,%20boolean)
      * @param tableMeta
@@ -124,11 +124,16 @@ public class AnalysisMetaDB {
 
         while (rs.next()) {
             IndexMeta im = new IndexMeta();
+            int indexType = rs.getInt("TYPE");
+            if(IndexType.tableIndexStatistic.ordinal() == indexType
+            || IndexType.tableIndexOther.ordinal() == indexType){
+                continue;
+            }
+            im.setIndexType(indexType);
             im.setIndexName(rs.getString("INDEX_NAME"));
             im.setColumnNames(rs.getString("COLUMN_NAME"));
             im.setNonUnique(rs.getBoolean("NON_UNIQUE"));
             im.setTableName(rs.getString("TABLE_NAME"));
-            im.setIndexType(rs.getString("TYPE"));
 
             tableMeta.getIndexs().add(im);
         }

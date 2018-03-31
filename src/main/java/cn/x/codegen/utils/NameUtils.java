@@ -14,7 +14,7 @@ public class NameUtils {
         StringBuffer name = new StringBuffer();
         String[] names = str.split("_");
         for (int i = 0, len = names.length; i < len; i++) {
-            name.append(names[i].substring(0, 1).toUpperCase() + names[i].substring(1));
+            name.append(names[i].substring(0, 1).toUpperCase() + names[i].substring(1).toLowerCase());
         }
         return name.toString();
     }

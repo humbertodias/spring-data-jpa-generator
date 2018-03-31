@@ -1,6 +1,7 @@
 package cn.x.codegen.db;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 
 /**
@@ -9,11 +10,18 @@ import lombok.Setter;
 @Getter
 @Setter
 public class IndexMeta {
-
+    @NonNull
     private String indexName;
     private String columnNames;
     private boolean nonUnique;
     private String tableName;
-    private String indexType;
+    private int indexType;
+}
 
+
+enum IndexType{
+    tableIndexStatistic,
+    tableIndexClustered,
+    tableIndexHashed,
+    tableIndexOther
 }

@@ -24,11 +24,12 @@ public class NameFunction implements TemplateMethodModelEx {
     public Object exec(List arguments) {
         String funName = ((SimpleScalar) arguments.get(0)).getAsString();
         String param1 = ((SimpleScalar) arguments.get(1)).getAsString();
-        if (StringUtils.isNoneBlank(tablePrefix)) {
+        if (tablePrefix != null) {
             if (("upperCamelCase".equals(funName) || "lowerCamelCase".equals(funName)) && param1.startsWith(tablePrefix)) {
                 param1 = param1.substring(tablePrefix.length());
             }
         }
+
 
         try {
             Method method = NameUtils.class.getDeclaredMethod(funName, String.class);

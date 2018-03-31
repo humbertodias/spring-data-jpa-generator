@@ -36,7 +36,7 @@ public class ${nf("upperCamelCase",tableName)}
     @GeneratedValue(strategy = GenerationType.AUTO)</#if>
     @Column(name = "${col.columnName}"<#if col.isNullable()>, nullable = false</#if><#if (col.characterMaximumLength??)>, length = ${col
 .characterMaximumLength?replace(',', '')}</#if><#if (col.numericScale?? && col.numericScale > 0)>, scale = ${col.numericScale}</#if>)
-    private ${tf(col.dataType)} ${col.columnName};
+    private ${tf(col.dataType)} ${nf("lowerCamelCase",col.columnName)};
     </#if>
 </#list>
 

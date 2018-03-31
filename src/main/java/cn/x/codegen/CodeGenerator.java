@@ -4,6 +4,7 @@ import cn.x.codegen.db.TableMeta;
 import cn.x.codegen.utils.NameUtils;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
+import freemarker.template.TemplateException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +26,7 @@ import java.util.Collections;
 @Component
 public class CodeGenerator implements InitializingBean {
 
-    private static final Logger log = LoggerFactory.getLogger(Application.class);
+    private static final Logger log = LoggerFactory.getLogger(CodeGenerator.class);
 
     @Value("${spring.freemarker.charset}")
     private String CHARSET;
@@ -41,23 +42,17 @@ public class CodeGenerator implements InitializingBean {
 
     @Value("${codegen.output.entity.overwrite}")
     private boolean entityOverwrite;
-    @Value("${codegen.output.entity.path}")
-    private String entityPath;
     @Value("${codegen.output.entity.package}")
     private String entityPackage;
 
 
     @Value("${codegen.output.repository.overwrite}")
     private boolean repositoryOverwrite;
-    @Value("${codegen.output.repository.path}")
-    private String repositoryPath;
     @Value("${codegen.output.repository.package}")
     private String repositoryPackage;
 
     @Value("${codegen.output.controller.overwrite}")
     private boolean controllerOverwrite;
-    @Value("${codegen.output.controller.path}")
-    private String controllerPath;
     @Value("${codegen.output.controller.package}")
     private String controllerPackage;
 
@@ -69,26 +64,21 @@ public class CodeGenerator implements InitializingBean {
     @Value("${codegen.output.configuration.package}")
     private String configurationPackage;
 
+    private boolean first = true;
+
 
     @Override
     public void afterPropertiesSet() {
-        checkOutputDir(entityPath, entityPackage);
-        checkOutputDir(repositoryPath, repositoryPackage);
-        checkOutputDir(controllerPath, controllerPackage);
-
+        checkOutputDir(configurationPath, entityPackage);
+        checkOutputDir(configurationPath, repositoryPackage);
+        checkOutputDir(configurationPath, controllerPackage);
     }
 
-    public void afterProcess() {
-
-        try {
-            Template configurationTpl = freemarkerConfiguration.getTemplate("configuration.ftl", CHARSET);
-            String configurationCode = FreeMarkerTemplateUtils.processTemplateIntoString(configurationTpl, this);
-            String configurationCodePath = checkOutputDir(configurationPath, configurationPackage) + File.separator + "AppConfiguration.java";
-            writeFile(configurationCodePath, configurationCode, controllerOverwrite);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
+    private void createBaseConfiguration() throws IOException, TemplateException {
+        Template configurationTpl = freemarkerConfiguration.getTemplate("configuration.ftl", CHARSET);
+        String configurationCode = FreeMarkerTemplateUtils.processTemplateIntoString(configurationTpl, this);
+        String configurationCodePath = checkOutputDir(configurationPath, configurationPackage) + File.separator + "AppConfiguration.java";
+        writeFile(configurationCodePath, configurationCode, controllerOverwrite);
     }
 
     private String checkOutputDir(String path, String pack) {
@@ -107,6 +97,11 @@ public class CodeGenerator implements InitializingBean {
             log.error(String.format("Skipping table %s because doesn't have a primary key\n", tableMeta.getTableName()));
         }else {
 
+            if(first){
+                first = false;
+                createBaseConfiguration();
+            }
+
             String tableName = tableMeta.getTableName();
             if (StringUtils.isNoneBlank(tablePrefix) && tableName.startsWith(tablePrefix)) {
                 tableName = tableName.substring(tablePrefix.length());
@@ -115,19 +110,18 @@ public class CodeGenerator implements InitializingBean {
 
             Template entityTpl = freemarkerConfiguration.getTemplate("entity.ftl", CHARSET);
             String entityCode = FreeMarkerTemplateUtils.processTemplateIntoString(entityTpl, tableMeta);
-            String entityCodePath = checkOutputDir(entityPath, entityPackage) + File.separator + entityName + ".java";
+            String entityCodePath = checkOutputDir(configurationPath, entityPackage) + File.separator + entityName + ".java";
             writeFile(entityCodePath, entityCode, entityOverwrite);
 
             Template repositoryTpl = freemarkerConfiguration.getTemplate("repository.ftl", CHARSET);
             String repositoryCode = FreeMarkerTemplateUtils.processTemplateIntoString(repositoryTpl, tableMeta);
-            String repositoryCodePath = checkOutputDir(repositoryPath, repositoryPackage) + File.separator + entityName + "Repository.java";
+            String repositoryCodePath = checkOutputDir(configurationPath, repositoryPackage) + File.separator + entityName + "Repository.java";
             writeFile(repositoryCodePath, repositoryCode, repositoryOverwrite);
 
             Template controllerTpl = freemarkerConfiguration.getTemplate("controller.ftl", CHARSET);
             String controllerCode = FreeMarkerTemplateUtils.processTemplateIntoString(controllerTpl, tableMeta);
-            String controllerCodePath = checkOutputDir(controllerPath, controllerPackage) + File.separator + entityName + "Controller.java";
+            String controllerCodePath = checkOutputDir(configurationPath, controllerPackage) + File.separator + entityName + "Controller.java";
             writeFile(controllerCodePath, controllerCode, controllerOverwrite);
-
 
             log.info("Generated files for " + tableName);
         }
@@ -139,6 +133,5 @@ public class CodeGenerator implements InitializingBean {
             Files.write(file.toPath(), Collections.singleton(code), Charset.forName(CHARSET));
         }
     }
-
 
 }
