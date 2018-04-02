@@ -90,15 +90,12 @@ public class AnalysisMetaDB {
         }
     }
 
-
     private boolean isPrimaryKey(ColumnMeta columnMeta, List<IndexMeta> primaryKeys){
         return primaryKeys.stream().filter(idx -> idx.getColumnNames().equalsIgnoreCase(columnMeta.getColumnName()) ).count() > 0 ;
     }
 
-
     public List<IndexMeta> getPrimaryKeys(TableMeta tableMeta) throws SQLException {
         List<IndexMeta> list = new ArrayList<>();
-
 
         ResultSet rs = metaData.getPrimaryKeys(tableMeta.getCatalog(),tableMeta.getTableSchema(), tableMeta.getTableName());
         while (rs.next()) {

@@ -115,5 +115,6 @@ codegen:
   column-type-mapping[longvarchar]: String
   column-type-mapping[longvarbinary]: byte[]
   column-type-mapping[clob]: String
+  column-type-mapping[other]: String
 
 
