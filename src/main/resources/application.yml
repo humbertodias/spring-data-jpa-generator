@@ -6,11 +6,11 @@ spring:
   main:
     banner-mode: console
 
-#  datasource:
-#    driver-class-name: com.mysql.cj.jdbc.Driver
-#    url: jdbc:mysql://127.0.0.1:3306/crudtest?useSSL=false
-#    username: root
-#    password: root
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/crudtest?useSSL=false
+    username: root
+    password: root
 
 #  datasource:
 #    driver-class-name: org.postgresql.Driver
@@ -29,11 +29,11 @@ spring:
 #    username: sa
 #    password:
 
-  datasource:
-    driver-class-name: oracle.jdbc.OracleDriver
-    url: jdbc:oracle:thin:@localhost:1521:XE
-    username: crudtest
-    password: crudtest
+#  datasource:
+#    driver-class-name: oracle.jdbc.OracleDriver
+#    url: jdbc:oracle:thin:@localhost:1521:XE
+#    username: crudtest
+#    password: crudtest
 
 
   freemarker:
@@ -81,7 +81,7 @@ codegen:
 
   ## MySQL and JAVA type mapping
   ## http://www.cnblogs.com/waterystone/p/6226356.html
-  column-type-mapping[bit]: byte[]
+  column-type-mapping[bit]: Byte[]
   column-type-mapping[tinyint]: Integer
   column-type-mapping[smallint]: Integer
   column-type-mapping[mediumint]: Integer
@@ -97,15 +97,15 @@ codegen:
   column-type-mapping[time]: java.sql.Time
   column-type-mapping[char]: String
   column-type-mapping[varchar]: String
-  column-type-mapping[binary]: byte[]
-  column-type-mapping[varbinary]: byte[]
-  column-type-mapping[tinyblob]: byte[]
+  column-type-mapping[binary]: Byte[]
+  column-type-mapping[varbinary]: Byte[]
+  column-type-mapping[tinyblob]: Byte[]
   column-type-mapping[tinytext]: String
-  column-type-mapping[blob]: byte[]
+  column-type-mapping[blob]: Byte[]
   column-type-mapping[text]: String
-  column-type-mapping[mediumblob]: byte[]
+  column-type-mapping[mediumblob]: Byte[]
   column-type-mapping[mediumtext]: String
-  column-type-mapping[longblob]: byte[]
+  column-type-mapping[longblob]: Byte[]
   column-type-mapping[longtext]: String
   column-type-mapping[enum]: String
   column-type-mapping[set]: String
@@ -113,7 +113,7 @@ codegen:
   column-type-mapping[point]: String
   column-type-mapping[numeric]: Integer
   column-type-mapping[longvarchar]: String
-  column-type-mapping[longvarbinary]: byte[]
+  column-type-mapping[longvarbinary]: Byte[]
   column-type-mapping[clob]: String
   column-type-mapping[other]: String
 

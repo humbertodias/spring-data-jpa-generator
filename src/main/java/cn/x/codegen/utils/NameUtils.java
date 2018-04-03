@@ -72,4 +72,14 @@ public class NameUtils {
         String s = str.substring(li+1, gi);
         return s.replaceAll(" ", "").split(",");
     }
+
+
+    public static String jdlFormatFieldType(String str) {
+        int idxDot = str.lastIndexOf(".");
+        if(idxDot >= 0){
+            return str.substring(idxDot+1);
+        }
+        return str;
+    }
+
 }

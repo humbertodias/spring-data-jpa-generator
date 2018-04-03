@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 import java.util.Collections;
 
 /**
@@ -78,7 +79,7 @@ public class CodeGenerator implements InitializingBean {
         Template configurationTpl = freemarkerConfiguration.getTemplate("configuration.ftl", CHARSET);
         String configurationCode = FreeMarkerTemplateUtils.processTemplateIntoString(configurationTpl, this);
         String configurationCodePath = checkOutputDir(configurationPath, configurationPackage) + File.separator + "AppConfiguration.java";
-        writeFile(configurationCodePath, configurationCode, controllerOverwrite);
+        writeFile(configurationCodePath, configurationCode, controllerOverwrite, StandardOpenOption.CREATE_NEW);
     }
 
     private String checkOutputDir(String path, String pack) {
@@ -111,26 +112,34 @@ public class CodeGenerator implements InitializingBean {
             Template entityTpl = freemarkerConfiguration.getTemplate("entity.ftl", CHARSET);
             String entityCode = FreeMarkerTemplateUtils.processTemplateIntoString(entityTpl, tableMeta);
             String entityCodePath = checkOutputDir(configurationPath, entityPackage) + File.separator + entityName + ".java";
-            writeFile(entityCodePath, entityCode, entityOverwrite);
+            writeFile(entityCodePath, entityCode, entityOverwrite, StandardOpenOption.CREATE_NEW);
 
             Template repositoryTpl = freemarkerConfiguration.getTemplate("repository.ftl", CHARSET);
             String repositoryCode = FreeMarkerTemplateUtils.processTemplateIntoString(repositoryTpl, tableMeta);
             String repositoryCodePath = checkOutputDir(configurationPath, repositoryPackage) + File.separator + entityName + "Repository.java";
-            writeFile(repositoryCodePath, repositoryCode, repositoryOverwrite);
+            writeFile(repositoryCodePath, repositoryCode, repositoryOverwrite, StandardOpenOption.CREATE_NEW);
 
             Template controllerTpl = freemarkerConfiguration.getTemplate("controller.ftl", CHARSET);
             String controllerCode = FreeMarkerTemplateUtils.processTemplateIntoString(controllerTpl, tableMeta);
             String controllerCodePath = checkOutputDir(configurationPath, controllerPackage) + File.separator + entityName + "Controller.java";
-            writeFile(controllerCodePath, controllerCode, controllerOverwrite);
+            writeFile(controllerCodePath, controllerCode, controllerOverwrite, StandardOpenOption.CREATE_NEW);
+
+            Template jdlTpl = freemarkerConfiguration.getTemplate("jdl.ftl", CHARSET);
+            String jdlCode = FreeMarkerTemplateUtils.processTemplateIntoString(jdlTpl, tableMeta);
+            String jdlPath = checkOutputDir(configurationPath, configurationPackage) + File.separator + "Entities.jdl";
+            writeFile(jdlPath, jdlCode, configurationOverwrite, StandardOpenOption.APPEND);
 
             log.info("Generated files for " + tableName);
         }
     }
 
-    private void writeFile(String path, String code, boolean overwrite) throws IOException {
+    private void writeFile(String path, String code, boolean overwrite, StandardOpenOption openOption) throws IOException {
         File file = new File(path);
         if (!file.exists() || overwrite) {
-            Files.write(file.toPath(), Collections.singleton(code), Charset.forName(CHARSET));
+            if(openOption==StandardOpenOption.APPEND){
+                file.createNewFile();
+            }
+            Files.write(file.toPath(), Collections.singleton(code), Charset.forName(CHARSET), openOption);
         }
     }
 
