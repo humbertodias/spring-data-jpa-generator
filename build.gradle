@@ -68,6 +68,9 @@ dependencies {
     compile('org.postgresql:postgresql')
     compile('mysql:mysql-connector-java:6.0.6')
 
+    // Fix for Java 9 : Caused by: java.lang.ClassNotFoundException: javax.xml.bind.annotation.XmlType
+    compile 'javax.xml.bind:jaxb-api:2.3.0'
+
     /*
     wget http://www.datanucleus.org:15080/downloads/maven2/oracle/xdb/1.0/xdb-1.0.jar
     mvn install:install-file -Dfile=xdb-1.0.jar -DgroupId=oracle -DartifactId=xdb -Dversion=1.0 -Dpackaging=jar -DgeneratePom=true
